@@ -64,6 +64,9 @@
         <input type="password" id="password" placeholder="Password">
         
         <button onclick="handleLogin()">LOGIN...</button>
+
+        <button onclick="handleLogin()">Login ဝင်မည်</button>
+        <button onclick="handleSignUp()" style="background-color: #333; margin-top: 10px;">အကောင့်သစ်ဖွင့်မည် (Sign Up)</button>
         
         <p id="message"></p>
     </div>
@@ -101,6 +104,28 @@
                 messageTag.classList.add('success');
                 // Login အောင်မြင်ရင် တခြား page ကိုသွားခိုင်းလို့ရပါတယ်
                 // window.location.href = "home.html"; 
+            }
+        }
+
+        async function handleSignUp() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageTag = document.getElementById('message');
+        
+            messageTag.innerText = "အကောင့်ဖွင့်နေသည်...";
+        
+            // Supabase ကို အကောင့်အသစ်ဆောက်ခိုင်းခြင်း
+            const { data, error } = await supabaseClient.auth.signUp({
+                email: email,
+                password: password,
+            });
+        
+            if (error) {
+                messageTag.innerText = "Error: " + error.message;
+                messageTag.classList.remove('success');
+            } else {
+                messageTag.innerText = "အကောင့်ဖွင့်ခြင်း အောင်မြင်ပါသည်။ အခု Login ပြန်ဝင်ကြည့်ပါ။";
+                messageTag.classList.add('success');
             }
         }
     </script>
