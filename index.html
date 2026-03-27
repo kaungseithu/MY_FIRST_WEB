@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My First Website</title>
+    <title>My First Login Web</title>
     <style>
-        /* CSS ဖြင့် ပုံစံဖော်ခြင်း */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f2f5;
             display: flex;
             justify-content: center;
@@ -15,37 +14,96 @@
             height: 100vh;
             margin: 0;
         }
-        .card {
+        .login-card {
             background: white;
-            padding: 2rem;
+            padding: 2.5rem;
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             text-align: center;
-            max-width: 300px;
-            width: 90%;
+            width: 320px;
         }
-        h1 { color: #333; margin-bottom: 10px; }
-        p { color: #666; line-height: 1.6; }
-        .btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #0070f3;
+        h2 { color: #333; margin-bottom: 1.5rem; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        input:focus { border-color: #3ecf8e; }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3ecf8e;
             color: white;
-            text-decoration: none;
-            border-radius: 5px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
             transition: 0.3s;
         }
-        .btn:hover { background-color: #0051af; }
+        button:hover { background-color: #34b27b; }
+        #message {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #ff4d4d;
+        }
+        .success { color: #3ecf8e !important; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>မင်္ဂလာပါ ခင်ဗျာ! 👋</h1>
-        <p>ဒါကတော့ ကျွန်တော့်ရဲ့ ပထမဆုံး Website လေးပါ။ Vercel ပေါ်မှာ Deploy လုပ်ထားတာ ဖြစ်ပါတယ်။</p>
-        <a href="#" class="btn">Learn More</a>
+    <div class="login-card">
+        <h2>မင်္ဂလာပါ</h2>
+        <p style="color: #666; font-size: 14px;">Login ဝင်ပြီး စမ်းသပ်ကြည့်ပါ</p>
+        
+        <input type="email" id="email" placeholder="Email Address">
+        <input type="password" id="password" placeholder="Password">
+        
+        <button onclick="handleLogin()">LOGIN...</button>
+        
+        <p id="message"></p>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        // ၁။ သင့်ရဲ့ Supabase URL
+        const SUPABASE_URL = 'https://mafmhkeleqjquvozvons.supabase.co';
+        
+        // ၂။ သင့်ရဲ့ Publishable Key (ပုံထဲက Key ကို ဒီမှာ အတိအကျ ပြန်ထည့်ပါ)
+        const SUPABASE_KEY = 'sb_publishable_MS_vreyV-1-9ga6LlxsSew_oywiXsMN';
+
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function handleLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageTag = document.getElementById('message');
+
+            messageTag.innerText = "Please wait a moment...";
+            messageTag.classList.remove('success');
+
+            // Supabase Authentication ဖြင့် Login စစ်ဆေးခြင်း
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                messageTag.innerText = "Something Wrong! " + error.message;
+            } else {
+                messageTag.innerText = "Successful Login! 👋";
+                messageTag.classList.add('success');
+                // Login အောင်မြင်ရင် တခြား page ကိုသွားခိုင်းလို့ရပါတယ်
+                // window.location.href = "home.html"; 
+            }
+        }
+    </script>
 
 </body>
 </html>
